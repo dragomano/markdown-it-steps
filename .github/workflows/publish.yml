@@ -1,0 +1,37 @@
+name: Publish to NPM
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          # version: 9
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Publish package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+        # Currently, only npm supports publishing packages with provenance
+        # https://docs.npmjs.com/generating-provenance-statements
+        # npm install --force
+        # npm publish --provenance --access public
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm publish --filter ./packages/markdown-it-steps --no-git-checks
