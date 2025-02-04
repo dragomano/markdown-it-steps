@@ -1,6 +1,6 @@
-# `markdown-it-steps'
+# markdown-it-steps
 
-VitePress and Markdown-it plugin adding the Steps container to your Markdown markup.
+Markdown-it plugin adding the Steps container in Markdown.
 
 ## Documentation
 
