@@ -1,0 +1,50 @@
+{
+  "name": "markdown-it-steps",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Adds a Steps container for use in Markdown.",
+  "keywords": [
+    "markdown-it",
+    "markdown-it-plugin",
+    "markdown-steps",
+    "vitepress-plugin",
+    "vitepress-steps"
+  ],
+  "author": "Bugo",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./index.js": "./index.js",
+    "./style.css": "./style.css",
+    "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2"
+  },
+  "peerDependencies": {
+    "markdown-it": ">=14.0.0"
+  },
+  "peerDependenciesMeta": {
+    "markdown-it": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "^18.17.1 || ^20.3.0 || >=21.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "sideEffects": false,
+  "homepage": "https://github.com/dragomano/markdown-it-steps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dragomano/markdown-it-steps.git",
+    "directory": "packages/markdown-it-steps"
+  },
+  "bugs": "https://github.com/dragomano/markdown-it-steps/issues"
+}

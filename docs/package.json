@@ -1,0 +1,29 @@
+{
+  "name": "markdown-it-steps-docs",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Markdown-it-steps plugin documentation",
+  "author": "Bugo",
+  "type": "module",
+  "devDependencies": {
+    "markdown-it-steps": "workspace:*",
+    "vitepress": "^1.6.3"
+  },
+  "engines": {
+    "node": "^18.17.1 || ^20.3.0 || >=21.0.0"
+  },
+  "private": true,
+  "sideEffects": false,
+  "homepage": "https://github.com/dragomano/markdown-it-steps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dragomano/markdown-it-steps.git",
+    "directory": "docs"
+  },
+  "bugs": "https://github.com/dragomano/markdown-it-steps/issues",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  }
+}
