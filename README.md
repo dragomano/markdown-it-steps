@@ -1,1 +1,1 @@
-F:/HAWK/Documents/GitHub/markdown-it-steps/packages/markdown-it-steps/README.md
+packages/markdown-it-steps/README.md
