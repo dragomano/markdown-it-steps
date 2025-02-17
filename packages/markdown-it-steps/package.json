@@ -6,9 +6,7 @@
   "keywords": [
     "markdown-it",
     "markdown-it-plugin",
-    "markdown-steps",
-    "vitepress-plugin",
-    "vitepress-steps"
+    "vitepress-plugin"
   ],
   "author": "Bugo",
   "type": "module",
