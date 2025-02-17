@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
-import markdownSteps from 'markdown-it-steps/index.js';
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
+import markdownSteps from 'markdown-it-steps/index.js'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -15,7 +16,13 @@ export default defineConfig({
   },
   markdown: {
     config: (md) => {
+      md.use(groupIconMdPlugin);
       md.use(markdownSteps);
     }
   },
+  vite: {
+    plugins: [
+      groupIconVitePlugin()
+    ],
+  }
 })
