@@ -1,6 +1,5 @@
 {
   "name": "markdown-it-steps-monorepo",
-  "version": "0.0.1",
   "license": "MIT",
   "description": "Adds a Steps container for use in Markdown.",
   "keywords": [
