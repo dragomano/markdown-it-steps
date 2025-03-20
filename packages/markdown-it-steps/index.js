@@ -1,10 +1,20 @@
+function getLineText(state, line) {
+  const startPos = state.bMarks[line] + state.tShift[line];
+  const maxPos = state.eMarks[line];
+  const lineText = state.src.slice(startPos, maxPos);
+
+  return lineText.replace(/:::\s+steps/, ':::steps');
+}
+
 export default function markdownSteps(md) {
   md.block.ruler.before('paragraph', 'steps', (state, startLine, endLine, silent) => {
-    const startPos = state.bMarks[startLine] + state.tShift[startLine];
-    const maxPos = state.eMarks[startLine];
-    const lineText = state.src.slice(startPos, maxPos);
+    const lineText = getLineText(state, startLine);
 
     if (!lineText.startsWith(':::steps')) return false;
+
+    const titleMatch = lineText.slice(8).trim();
+    const hasTitle = titleMatch.length > 0;
+
     if (silent) return true;
 
     let nextLine = startLine + 1;
@@ -15,10 +25,16 @@ export default function markdownSteps(md) {
     token.block = true;
     token.attrs = [['class', 'steps']];
 
+    if (hasTitle) {
+      token = state.push('paragraph_open', 'p', 1);
+      token.attrs = [['class', 'custom-title']];
+      token = state.push('text', '', 0);
+      token.content = titleMatch;
+      token = state.push('paragraph_close', 'p', -1);
+    }
+
     while (nextLine < endLine) {
-      const nextStartPos = state.bMarks[nextLine] + state.tShift[nextLine];
-      const nextMaxPos = state.eMarks[nextLine];
-      const nextLineText = state.src.slice(nextStartPos, nextMaxPos);
+      const nextLineText = getLineText(state, nextLine);
 
       if (nextLineText.startsWith(':::')) {
         if (nextLineText === ':::') {
