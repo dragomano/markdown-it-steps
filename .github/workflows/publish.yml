@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*'
+      - "v*"
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:
