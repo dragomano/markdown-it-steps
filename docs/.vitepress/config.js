@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
-import markdownSteps from 'markdown-it-steps/index.js'
+import markdownSteps from 'markdown-it-steps'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -10,6 +10,10 @@ export default defineConfig({
   srcDir: './src',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    nav: [
+      { text: 'Guide', link: '/' },
+      { text: 'Options', link: '/options' }
+    ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/dragomano/markdown-it-steps' }
     ]

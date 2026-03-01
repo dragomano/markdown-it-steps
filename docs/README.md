@@ -7,7 +7,7 @@ Markdown-it plugin adding the Steps container in Markdown.
 Run the documentation locally by running the following command in your terminal:
 
 ```shell
-pnpm run dev
+pnpm run docs:dev
 ```
 
 Content can be found in the [`src/`](./src) directory.
