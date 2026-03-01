@@ -6,7 +6,8 @@
   "keywords": [
     "markdown-it",
     "markdown-it-plugin",
-    "vitepress-plugin"
+    "vitepress-plugin",
+    "steps"
   ],
   "author": "Bugo",
   "type": "module",
@@ -20,7 +21,9 @@
     "./package.json": "./package.json"
   },
   "devDependencies": {
-    "@types/markdown-it": "^14.1.2"
+    "@types/markdown-it": "^14.1.2",
+    "markdown-it": "^14.1.1",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "markdown-it": ">=14.0.0"
@@ -31,7 +34,7 @@
     }
   },
   "engines": {
-    "node": "^18.17.1 || ^20.3.0 || >=21.0.0"
+    "node": ">=20.0.0"
   },
   "publishConfig": {
     "access": "public",
@@ -44,5 +47,8 @@
     "url": "https://github.com/dragomano/markdown-it-steps.git",
     "directory": "packages/markdown-it-steps"
   },
-  "bugs": "https://github.com/dragomano/markdown-it-steps/issues"
+  "bugs": "https://github.com/dragomano/markdown-it-steps/issues",
+  "scripts": {
+    "test": "vitest run"
+  }
 }
