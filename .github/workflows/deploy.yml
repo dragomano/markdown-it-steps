@@ -1,17 +1,14 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger the workflow every time you push to the `main` branch
-  # Using a different branch name? Replace `main` with your branch’s name
   push:
     branches: [main]
     paths:
       - '.github/workflows/deploy.yml'
       - 'docs/**'
-  # Allows you to run this workflow manually from the Actions tab on GitHub.
+
   workflow_dispatch:
 
-# Allow this job to clone the repo and create a page deployment
 permissions:
   contents: read
   pages: write
@@ -22,15 +19,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
 
@@ -46,7 +42,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -59,7 +55,7 @@ jobs:
           pnpm install --no-frozen-lockfile
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Build with VitePress
         run: |
@@ -68,11 +64,10 @@ jobs:
           touch .vitepress/dist/.nojekyll
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docs/.vitepress/dist
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
