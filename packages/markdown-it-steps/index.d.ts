@@ -1,10 +1,12 @@
-declare module "markdown-it-steps" {
-  // @ts-ignore
-  import type MarkdownIt from "markdown-it";
+// @ts-ignore
+import type MarkdownIt from 'markdown-it';
 
-  /**
-   * markdown-it plugin for processing :::steps ... ::: blocks
-   * @param md - Instance of markdown-it
-   */
-  export default function markdownSteps(md: MarkdownIt): void;
+export type TitleTag = 'p' | 'div' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+export interface MarkdownStepsOptions {
+  containerClass?: string;
+  titleTag?: TitleTag;
+  titleClass?: string;
 }
+
+export default function markdownSteps(md: MarkdownIt, options?: MarkdownStepsOptions): void;
