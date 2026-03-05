@@ -13,9 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
@@ -29,13 +26,12 @@ jobs:
           cache: pnpm
 
       - name: Publish package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
         # Currently, only npm supports publishing packages with provenance
         # https://docs.npmjs.com/generating-provenance-statements
         # npm install --force
         # npm publish --provenance --access public
         run: |
           pnpm install --frozen-lockfile
+          pnpm --filter ./packages/markdown-it-steps test
+          pnpm --filter ./packages/markdown-it-steps build
           pnpm publish --filter ./packages/markdown-it-steps --no-git-checks

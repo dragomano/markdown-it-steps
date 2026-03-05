@@ -50,18 +50,18 @@ jobs:
             ${{ runner.os }}
 
       - name: Install dependencies
-        run: |
-          cd docs
-          pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
+
+      - name: Build markdown-it-steps package
+        run: pnpm --filter ./packages/markdown-it-steps build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Build with VitePress
         run: |
-          cd docs
-          pnpm run docs:build
-          touch .vitepress/dist/.nojekyll
+          pnpm --filter ./docs docs:build
+          touch docs/.vitepress/dist/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
