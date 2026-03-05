@@ -1,41 +1,55 @@
+import type MarkdownIt from 'markdown-it';
+
 const STEPS_OPEN_RE = /^:::\s*steps(?:\s+(.*))?$/;
 const CONTAINER_OPEN_RE = /^:::\s*\S+/;
 const CONTAINER_CLOSE_RE = /^:::\s*$/;
 const FENCE_OPEN_RE = /^([`~]{3,})/;
-const ALLOWED_TITLE_TAGS = new Set(['p', 'div', 'h2', 'h3', 'h4', 'h5', 'h6']);
 
-/**
- * @typedef {'p' | 'div' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'} TitleTag
- *
- * @typedef {Object} MarkdownStepsOptions
- * @property {string} [containerClass='steps'] Class name for the outer steps' container.
- * @property {TitleTag} [titleTag='p'] HTML tag used for the optional title.
- * @property {string} [titleClass='custom-title'] Class name for the optional title.
- */
+export type TitleTag = 'p' | 'div' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
-function getLineText(state, line) {
+export interface MarkdownStepsOptions {
+  containerClass?: string;
+  titleTag?: TitleTag;
+  titleClass?: string;
+}
+
+interface FenceState {
+  char: string;
+  length: number;
+}
+
+type StateBlock = Parameters<MarkdownIt['block']['tokenize']>[0];
+type Token = ReturnType<StateBlock['push']>;
+type RenderTokens = Parameters<MarkdownIt['renderer']['renderToken']>[0];
+type RenderOptions = Parameters<MarkdownIt['renderer']['renderToken']>[2];
+type RendererInstance = MarkdownIt['renderer'];
+
+const ALLOWED_TITLE_TAGS = new Set<TitleTag>(['p', 'div', 'h2', 'h3', 'h4', 'h5', 'h6']);
+
+function getLineText(state: StateBlock, line: number): string {
   const startPos = state.bMarks[line] + state.tShift[line];
   const maxPos = state.eMarks[line];
+
   return state.src.slice(startPos, maxPos).trimEnd();
 }
 
-/**
- * @param {import('markdown-it').default} md
- * @param {MarkdownStepsOptions} [options]
- */
-export default function markdownSteps(md, options = {}) {
-  const customContainerClass = typeof options.containerClass === 'string' && options.containerClass.trim().length > 0
-    ? options.containerClass.trim()
-    : '';
+function isTitleTag(value: unknown): value is TitleTag {
+  return typeof value === 'string' && ALLOWED_TITLE_TAGS.has(value as TitleTag);
+}
+
+export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOptions = {}): void {
+  const customContainerClass =
+    typeof options.containerClass === 'string' && options.containerClass.trim().length > 0
+      ? options.containerClass.trim()
+      : '';
   const containerClass = customContainerClass
     ? Array.from(new Set(['steps', ...customContainerClass.split(/\s+/)])).join(' ')
     : 'steps';
-  const titleClass = typeof options.titleClass === 'string' && options.titleClass.trim().length > 0
-    ? options.titleClass.trim()
-    : 'custom-title';
-  const titleTag = typeof options.titleTag === 'string' && ALLOWED_TITLE_TAGS.has(options.titleTag)
-    ? options.titleTag
-    : 'p';
+  const titleClass =
+    typeof options.titleClass === 'string' && options.titleClass.trim().length > 0
+      ? options.titleClass.trim()
+      : 'custom-title';
+  const titleTag: TitleTag = isTitleTag(options.titleTag) ? options.titleTag : 'p';
 
   md.block.ruler.before('paragraph', 'steps', (state, startLine, endLine, silent) => {
     const lineText = getLineText(state, startLine);
@@ -50,8 +64,8 @@ export default function markdownSteps(md, options = {}) {
 
     let nextLine = startLine + 1;
     let openBlocks = 1;
-    let activeFence = null;
-    let token;
+    let activeFence: FenceState | null = null;
+    let token: Token;
 
     while (nextLine < endLine) {
       const nextLineText = getLineText(state, nextLine);
@@ -111,8 +125,16 @@ export default function markdownSteps(md, options = {}) {
     return true;
   });
 
-  md.renderer.rules.steps_open = (tokens, idx, renderOptions, env, self) => self.renderToken(tokens, idx, renderOptions);
-  md.renderer.rules.steps_close = (tokens, idx, renderOptions, env, self) => self.renderToken(tokens, idx, renderOptions);
-  md.renderer.rules.steps_title_open = (tokens, idx, renderOptions, env, self) => self.renderToken(tokens, idx, renderOptions);
-  md.renderer.rules.steps_title_close = (tokens, idx, renderOptions, env, self) => self.renderToken(tokens, idx, renderOptions);
+  const renderToken = (
+    tokens: RenderTokens,
+    idx: number,
+    renderOptions: RenderOptions,
+    _env: unknown,
+    self: RendererInstance,
+  ): string => self.renderToken(tokens, idx, renderOptions);
+
+  md.renderer.rules.steps_open = renderToken;
+  md.renderer.rules.steps_close = renderToken;
+  md.renderer.rules.steps_title_open = renderToken;
+  md.renderer.rules.steps_title_close = renderToken;
 }

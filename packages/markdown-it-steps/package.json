@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-steps",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "description": "Adds a Steps container for use in Markdown.",
   "keywords": [
@@ -11,18 +11,23 @@
   ],
   "author": "Bugo",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
-      "import": "./index.js",
-      "types": "./index.d.ts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
-    "./index.js": "./index.js",
-    "./style.css": "./style.css",
+    "./index.js": "./dist/index.js",
+    "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
     "markdown-it": "^14.1.1",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
   "peerDependencies": {
@@ -49,6 +54,8 @@
   },
   "bugs": "https://github.com/dragomano/markdown-it-steps/issues",
   "scripts": {
+    "build": "tsc -p tsconfig.json && node ./scripts/copy-style.mjs",
+    "prepack": "pnpm run build",
     "test": "vitest run"
   }
 }

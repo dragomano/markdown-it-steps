@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import { describe, expect, it } from 'vitest';
-import markdownSteps from './index.js';
+import markdownSteps from '../src/index.ts';
 
 function render(source, options) {
   return new MarkdownIt().use(markdownSteps, options).render(source);
@@ -86,5 +86,4 @@ describe('markdown-it-steps', () => {
       '<div class="steps" style="--steps-start: 0">\n<h3 class="steps-heading">\nGetting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
-
 });
