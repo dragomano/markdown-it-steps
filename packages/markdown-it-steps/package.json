@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-steps",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "description": "Adds a Steps container for use in Markdown.",
   "keywords": [
@@ -26,9 +26,9 @@
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
-    "markdown-it": "^14.1.1",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "markdown-it": "^14.3.0",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "markdown-it": ">=14.0.0"

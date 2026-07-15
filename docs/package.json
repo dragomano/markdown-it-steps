@@ -7,8 +7,8 @@
   "devDependencies": {
     "@miletorix/vitepress-back-to-top-button": "^1.0.3",
     "markdown-it-steps": "workspace:*",
-    "vitepress": "2.0.0-alpha.16",
-    "vitepress-plugin-group-icons": "^1.7.1"
+    "vitepress": "2.0.0-alpha.18",
+    "vitepress-plugin-group-icons": "^1.7.5"
   },
   "engines": {
     "node": ">=20.0.0"
