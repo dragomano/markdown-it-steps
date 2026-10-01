@@ -19,7 +19,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps Getting started\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">\nGetting started</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">Getting started</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -83,7 +83,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps Getting started\n1. First\n:::\n';
 
     expect(render(source, { titleTag: 'h3', titleClass: 'steps-heading' })).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<h3 class="steps-heading">\nGetting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps" style="--steps-start: 0">\n<h3 class="steps-heading">Getting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -108,6 +108,48 @@ describe('markdown-it-steps', () => {
 
     expect(render(source)).toBe(
       '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<ol start="3">\n<li>After</li>\n</ol>\n</div>\n',
+    );
+  });
+});
+
+describe('title inline markup', () => {
+  it('parses inline markup in the title', () => {
+    const source = ':::steps **Install** `npm`\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title"><strong>Install</strong> <code>npm</code></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('renders links in the title', () => {
+    const source = ':::steps [Docs](https://example.com)\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title"><a href="https://example.com">Docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('resolves reference links defined after the container', () => {
+    const source = ':::steps [docs]\n1. First\n:::\n\n[docs]: https://example.com\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title"><a href="https://example.com">docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('escapes HTML in the title like regular paragraphs', () => {
+    const source = ':::steps <b>bold</b>\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">&lt;b&gt;bold&lt;/b&gt;</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('keeps escaped emphasis literal in the title', () => {
+    const source = ':::steps \\*not bold\\*\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">*not bold*</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 });

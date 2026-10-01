@@ -128,8 +128,13 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
       token = state.push('steps_title_open', titleTag, 1);
       token.block = true;
       token.attrs = [['class', titleClass]];
-      token = state.push('text', '', 0);
+      // The core inline rule parses `content` into `children` after block
+      // parsing, so the title must not be parsed here: doing both would
+      // duplicate the resulting tokens.
+      token = state.push('inline', '', 0);
       token.content = title;
+      token.children = [];
+      token.map = [startLine, startLine + 1];
       token = state.push('steps_title_close', titleTag, -1);
       token.block = true;
     }
