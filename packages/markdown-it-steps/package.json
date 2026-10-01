@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/markdown-it": "^14.2.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "markdown-it": "^14.3.2",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
@@ -56,6 +57,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && node ./scripts/copy-style.mjs",
     "prepack": "pnpm run build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   }
 }

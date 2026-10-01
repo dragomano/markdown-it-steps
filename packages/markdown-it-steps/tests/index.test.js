@@ -111,3 +111,87 @@ describe('markdown-it-steps', () => {
     );
   });
 });
+
+describe('marker line classification', () => {
+  it('keeps a bare longer marker line from breaking the container', () => {
+    const source = ':::steps\n1. First\n::::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First\n::::</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('supports VitePress-style nested containers with longer markers inside steps', () => {
+    const source = ':::steps\n:::: info\n::: warning\nbe careful\n:::\n::::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p>:::: info\n::: warning\nbe careful\n:::\n::::</p>\n</div>\n',
+    );
+  });
+
+  it('supports nested steps inside VitePress-style longer markers', () => {
+    const source = ':::steps\n:::: tip\n:::steps\n2. Inner\n:::\n::::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p>:::: tip</p>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<p>::::</p>\n</div>\n',
+    );
+  });
+
+  it('treats a ::: line whose tail starts with a colon as regular content', () => {
+    const source = ':::steps\n::: :::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p>::: :::</p>\n</div>\n',
+    );
+  });
+
+  it('does not close a container whose opening marker is longer than the closing one', () => {
+    const source = ':::steps\n:::: tip\ntext\n:::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<p>:::steps\n:::: tip\ntext\n:::\n:::</p>\n',
+    );
+  });
+});
+
+describe('indented code blocks inside steps', () => {
+  it('preserves ::: inside an indented code block', () => {
+    const source = ':::steps\ntext\n\n    :::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p>text</p>\n<pre><code>:::\n</code></pre>\n</div>\n',
+    );
+  });
+
+  it('preserves ::: after a list inside steps instead of closing the container', () => {
+    const source = ':::steps\n1. First\n\n    :::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>\n<p>First</p>\n<p>:::</p>\n</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('treats an indented fence inside steps as indented code, not as a fence', () => {
+    const source = ':::steps\n    ```\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<pre><code>```\n</code></pre>\n</div>\n',
+    );
+  });
+
+  it('preserves fences and ::: markers inside indented code', () => {
+    const source = ':::steps\ntext\n\n    ```\n    :::\n    ```\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<p>text</p>\n<pre><code>```\n:::\n```\n</code></pre>\n</div>\n',
+    );
+  });
+
+  it('searches for markers relative to the list indentation inside steps', () => {
+    const source = '1. Step\n   :::steps\n   text\n\n       :::\n   :::\n';
+
+    expect(render(source)).toBe(
+      '<ol>\n<li>Step\n<div class="steps" style="--steps-start: 0">\n<p>text</p>\n<pre><code>:::\n</code></pre>\n</div>\n</li>\n</ol>\n',
+    );
+  });
+});

@@ -1,8 +1,7 @@
 import type MarkdownIt from 'markdown-it';
 
 const STEPS_OPEN_RE = /^:::\s*steps(?:\s+(.*))?$/;
-const CONTAINER_OPEN_RE = /^:::\s*\S+/;
-const CONTAINER_CLOSE_RE = /^:::\s*$/;
+const CONTAINER_MARKER_RE = /^(:{3,})(.*)$/;
 const FENCE_OPEN_RE = /^([`~]{3,})/;
 
 export type TitleTag = 'p' | 'div' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -18,11 +17,13 @@ interface FenceState {
   length: number;
 }
 
+interface ContainerMarker {
+  length: number;
+  closes: boolean;
+}
+
 type StateBlock = Parameters<MarkdownIt['block']['tokenize']>[0];
 type Token = ReturnType<StateBlock['push']>;
-type RenderTokens = Parameters<MarkdownIt['renderer']['renderToken']>[0];
-type RenderOptions = Parameters<MarkdownIt['renderer']['renderToken']>[2];
-type RendererInstance = MarkdownIt['renderer'];
 
 const ALLOWED_TITLE_TAGS = new Set<TitleTag>(['p', 'div', 'h2', 'h3', 'h4', 'h5', 'h6']);
 
@@ -31,6 +32,18 @@ function getLineText(state: StateBlock, line: number): string {
   const maxPos = state.eMarks[line];
 
   return state.src.slice(startPos, maxPos).trimEnd();
+}
+
+function matchContainerMarker(text: string): ContainerMarker | null {
+  const match = text.match(CONTAINER_MARKER_RE);
+
+  if (!match) return null;
+
+  const tail = match[2].trim();
+
+  if (tail.startsWith(':')) return null;
+
+  return { length: match[1].length, closes: tail === '' };
 }
 
 function isTitleTag(value: unknown): value is TitleTag {
@@ -63,13 +76,17 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     if (silent) return true;
 
     let nextLine = startLine + 1;
-    let openBlocks = 1;
+    const openMarkers = [3];
     let activeFence: FenceState | null = null;
     let token: Token;
 
     while (nextLine < endLine) {
       const nextLineText = getLineText(state, nextLine);
-      const fenceMatch = nextLineText.match(FENCE_OPEN_RE);
+      // The code rule runs before fence and container rules in markdown-it, so a
+      // line indented 4+ relative to the block start is indented code content and
+      // can be neither a fence nor a container marker.
+      const isCodeIndent = state.sCount[nextLine] - state.blkIndent >= 4;
+      const fenceMatch = isCodeIndent ? null : nextLineText.match(FENCE_OPEN_RE);
 
       if (activeFence) {
         if (fenceMatch && fenceMatch[1][0] === activeFence.char && fenceMatch[1].length >= activeFence.length) {
@@ -85,19 +102,23 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
         continue;
       }
 
-      if (nextLineText.startsWith(':::')) {
-        if (CONTAINER_CLOSE_RE.test(nextLineText)) {
-          openBlocks--;
-          if (openBlocks === 0) break;
-        } else if (CONTAINER_OPEN_RE.test(nextLineText)) {
-          openBlocks++;
+      const marker = isCodeIndent ? null : matchContainerMarker(nextLineText);
+
+      if (marker) {
+        if (marker.closes) {
+          if (marker.length === openMarkers[openMarkers.length - 1]) {
+            openMarkers.pop();
+            if (openMarkers.length === 0) break;
+          }
+        } else {
+          openMarkers.push(marker.length);
         }
       }
 
       nextLine++;
     }
 
-    if (openBlocks !== 0) return false;
+    if (openMarkers.length !== 0) return false;
 
     token = state.push('steps_open', 'div', 1);
     token.block = true;
@@ -106,9 +127,7 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     if (hasTitle) {
       token = state.push('steps_title_open', titleTag, 1);
       token.block = true;
-      if (titleClass) {
-        token.attrs = [['class', titleClass]];
-      }
+      token.attrs = [['class', titleClass]];
       token = state.push('text', '', 0);
       token.content = title;
       token = state.push('steps_title_close', titleTag, -1);
@@ -128,17 +147,4 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
   md.block.ruler.before('paragraph', 'steps', stepsRule, {
     alt: ['paragraph', 'reference', 'blockquote', 'list'],
   });
-
-  const renderToken = (
-    tokens: RenderTokens,
-    idx: number,
-    renderOptions: RenderOptions,
-    _env: unknown,
-    self: RendererInstance,
-  ): string => self.renderToken(tokens, idx, renderOptions);
-
-  md.renderer.rules.steps_open = renderToken;
-  md.renderer.rules.steps_close = renderToken;
-  md.renderer.rules.steps_title_open = renderToken;
-  md.renderer.rules.steps_title_close = renderToken;
 }
