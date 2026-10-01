@@ -86,4 +86,28 @@ describe('markdown-it-steps', () => {
       '<div class="steps" style="--steps-start: 0">\n<h3 class="steps-heading">\nGetting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
+
+  it('opens the container when :::steps immediately follows a paragraph line', () => {
+    const source = 'para\n:::steps\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<p>para</p>\n<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('opens the container when :::steps immediately follows a list item', () => {
+    const source = '1. Step one\n:::steps\n2. A\n3. B\n:::\n';
+
+    expect(render(source)).toBe(
+      '<ol>\n<li>Step one</li>\n</ol>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>A</li>\n<li>B</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('opens a nested container immediately after a list item inside steps', () => {
+    const source = ':::steps\n1. Outer\n:::steps\n2. Inner\n:::\n3. After\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<ol start="3">\n<li>After</li>\n</ol>\n</div>\n',
+    );
+  });
 });

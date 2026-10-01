@@ -51,7 +51,7 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
       : 'custom-title';
   const titleTag: TitleTag = isTitleTag(options.titleTag) ? options.titleTag : 'p';
 
-  md.block.ruler.before('paragraph', 'steps', (state, startLine, endLine, silent) => {
+  const stepsRule = (state: StateBlock, startLine: number, endLine: number, silent: boolean): boolean => {
     const lineText = getLineText(state, startLine);
     const stepsMatch = lineText.match(STEPS_OPEN_RE);
 
@@ -123,6 +123,10 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     state.line = nextLine + 1;
 
     return true;
+  };
+
+  md.block.ruler.before('paragraph', 'steps', stepsRule, {
+    alt: ['paragraph', 'reference', 'blockquote', 'list'],
   });
 
   const renderToken = (
