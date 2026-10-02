@@ -1,4 +1,4 @@
-import type MarkdownIt from 'markdown-it';
+import type { MarkdownIt, StateBlock, Token } from 'markdown-it';
 
 const STEPS_OPEN_RE = /^:::\s*steps(?:\s+(.*))?$/;
 const CONTAINER_MARKER_RE = /^(:{3,})(.*)$/;
@@ -21,9 +21,6 @@ interface ContainerMarker {
   length: number;
   closes: boolean;
 }
-
-type StateBlock = Parameters<MarkdownIt['block']['tokenize']>[0];
-type Token = ReturnType<StateBlock['push']>;
 
 const ALLOWED_TITLE_TAGS = new Set<TitleTag>(['p', 'div', 'h2', 'h3', 'h4', 'h5', 'h6']);
 

@@ -2,5 +2,12 @@ packages:
   - docs
   - packages/*
 
+minimumReleaseAgeExclude:
+  - '@vitest/coverage-v8@5.0.3'
+  - '@vitest/mocker@5.0.3'
+  - '@vitest/spy@5.0.3'
+  - vitest@5.0.3
+  - vite@8.3.2
+
 onlyBuiltDependencies:
   - esbuild
