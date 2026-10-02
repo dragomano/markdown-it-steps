@@ -11,7 +11,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -19,7 +19,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps Getting started\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">Getting started</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<p class="custom-title">Getting started</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -27,7 +27,7 @@ describe('markdown-it-steps', () => {
     const source = ':::   steps\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -43,7 +43,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n```md\n:::tip\nhello\n:::\n```\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<pre><code class="language-md">:::tip\nhello\n:::\n</code></pre>\n</div>\n',
+      '<div class="steps">\n<pre><code class="language-md">:::tip\nhello\n:::\n</code></pre>\n</div>\n',
     );
   });
 
@@ -51,7 +51,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n```md\n:::tip\nhello\n```\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<pre><code class="language-md">:::tip\nhello\n</code></pre>\n</div>\n',
+      '<div class="steps">\n<pre><code class="language-md">:::tip\nhello\n</code></pre>\n</div>\n',
     );
   });
 
@@ -59,7 +59,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n:::note\ninner\n:::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p>:::note\ninner\n:::</p>\n</div>\n',
+      '<div class="steps">\n<p>:::note\ninner\n:::</p>\n</div>\n',
     );
   });
 
@@ -67,7 +67,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n```md\n:::note\ninner\n:::\n```\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<pre><code class="language-md">:::note\ninner\n:::\n</code></pre>\n</div>\n',
+      '<div class="steps">\n<pre><code class="language-md">:::note\ninner\n:::\n</code></pre>\n</div>\n',
     );
   });
 
@@ -75,7 +75,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n1. First\n:::\n';
 
     expect(render(source, { containerClass: 'guide-steps' })).toBe(
-      '<div class="steps guide-steps" style="--steps-start: 0">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps guide-steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -83,7 +83,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps Getting started\n1. First\n:::\n';
 
     expect(render(source, { titleTag: 'h3', titleClass: 'steps-heading' })).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<h3 class="steps-heading">Getting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<h3 class="steps-heading">Getting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -91,7 +91,7 @@ describe('markdown-it-steps', () => {
     const source = 'para\n:::steps\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<p>para</p>\n<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<p>para</p>\n<div class="steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -99,7 +99,7 @@ describe('markdown-it-steps', () => {
     const source = '1. Step one\n:::steps\n2. A\n3. B\n:::\n';
 
     expect(render(source)).toBe(
-      '<ol>\n<li>Step one</li>\n</ol>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>A</li>\n<li>B</li>\n</ol>\n</div>\n',
+      '<ol>\n<li>Step one</li>\n</ol>\n<div class="steps">\n<ol start="2">\n<li>A</li>\n<li>B</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -107,7 +107,7 @@ describe('markdown-it-steps', () => {
     const source = ':::steps\n1. Outer\n:::steps\n2. Inner\n:::\n3. After\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<ol start="3">\n<li>After</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<ol start="3">\n<li>After</li>\n</ol>\n</div>\n',
     );
   });
 });
@@ -117,7 +117,7 @@ describe('title inline markup', () => {
     const source = ':::steps **Install** `npm`\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title"><strong>Install</strong> <code>npm</code></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<p class="custom-title"><strong>Install</strong> <code>npm</code></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -125,7 +125,7 @@ describe('title inline markup', () => {
     const source = ':::steps [Docs](https://example.com)\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title"><a href="https://example.com">Docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<p class="custom-title"><a href="https://example.com">Docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -133,7 +133,7 @@ describe('title inline markup', () => {
     const source = ':::steps [docs]\n1. First\n:::\n\n[docs]: https://example.com\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title"><a href="https://example.com">docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<p class="custom-title"><a href="https://example.com">docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -141,7 +141,7 @@ describe('title inline markup', () => {
     const source = ':::steps <b>bold</b>\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">&lt;b&gt;bold&lt;/b&gt;</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<p class="custom-title">&lt;b&gt;bold&lt;/b&gt;</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -149,7 +149,7 @@ describe('title inline markup', () => {
     const source = ':::steps \\*not bold\\*\n1. First\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p class="custom-title">*not bold*</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<p class="custom-title">*not bold*</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
 });
@@ -159,7 +159,7 @@ describe('marker line classification', () => {
     const source = ':::steps\n1. First\n::::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First\n::::</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<ol>\n<li>First\n::::</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -167,7 +167,7 @@ describe('marker line classification', () => {
     const source = ':::steps\n:::: info\n::: warning\nbe careful\n:::\n::::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p>:::: info\n::: warning\nbe careful\n:::\n::::</p>\n</div>\n',
+      '<div class="steps">\n<p>:::: info\n::: warning\nbe careful\n:::\n::::</p>\n</div>\n',
     );
   });
 
@@ -175,7 +175,7 @@ describe('marker line classification', () => {
     const source = ':::steps\n:::: tip\n:::steps\n2. Inner\n:::\n::::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p>:::: tip</p>\n<div class="steps" style="--steps-start: 0">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<p>::::</p>\n</div>\n',
+      '<div class="steps">\n<p>:::: tip</p>\n<div class="steps">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<p>::::</p>\n</div>\n',
     );
   });
 
@@ -183,7 +183,7 @@ describe('marker line classification', () => {
     const source = ':::steps\n::: :::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p>::: :::</p>\n</div>\n',
+      '<div class="steps">\n<p>::: :::</p>\n</div>\n',
     );
   });
 
@@ -201,7 +201,7 @@ describe('indented code blocks inside steps', () => {
     const source = ':::steps\ntext\n\n    :::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p>text</p>\n<pre><code>:::\n</code></pre>\n</div>\n',
+      '<div class="steps">\n<p>text</p>\n<pre><code>:::\n</code></pre>\n</div>\n',
     );
   });
 
@@ -209,7 +209,7 @@ describe('indented code blocks inside steps', () => {
     const source = ':::steps\n1. First\n\n    :::\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>\n<p>First</p>\n<p>:::</p>\n</li>\n</ol>\n</div>\n',
+      '<div class="steps">\n<ol>\n<li>\n<p>First</p>\n<p>:::</p>\n</li>\n</ol>\n</div>\n',
     );
   });
 
@@ -217,7 +217,7 @@ describe('indented code blocks inside steps', () => {
     const source = ':::steps\n    ```\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<pre><code>```\n</code></pre>\n</div>\n',
+      '<div class="steps">\n<pre><code>```\n</code></pre>\n</div>\n',
     );
   });
 
@@ -225,7 +225,7 @@ describe('indented code blocks inside steps', () => {
     const source = ':::steps\ntext\n\n    ```\n    :::\n    ```\n:::\n';
 
     expect(render(source)).toBe(
-      '<div class="steps" style="--steps-start: 0">\n<p>text</p>\n<pre><code>```\n:::\n```\n</code></pre>\n</div>\n',
+      '<div class="steps">\n<p>text</p>\n<pre><code>```\n:::\n```\n</code></pre>\n</div>\n',
     );
   });
 
@@ -233,7 +233,76 @@ describe('indented code blocks inside steps', () => {
     const source = '1. Step\n   :::steps\n   text\n\n       :::\n   :::\n';
 
     expect(render(source)).toBe(
-      '<ol>\n<li>Step\n<div class="steps" style="--steps-start: 0">\n<p>text</p>\n<pre><code>:::\n</code></pre>\n</div>\n</li>\n</ol>\n',
+      '<ol>\n<li>Step\n<div class="steps">\n<p>text</p>\n<pre><code>:::\n</code></pre>\n</div>\n</li>\n</ol>\n',
+    );
+  });
+});
+
+describe('start directive', () => {
+  it('emits --steps-start from the {start=N} directive', () => {
+    const source = ':::steps{start=5}\n1. First\n2. Second\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 5">\n<ol>\n<li>First</li>\n<li>Second</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('combines the directive with a title and accepts whitespace before it', () => {
+    const source = ':::steps {start=5} Continue\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps" style="--steps-start: 5">\n<p class="custom-title">Continue</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('supports zero and negative starts', () => {
+    expect(render(':::steps{start=0}\n1. First\n:::\n')).toBe(
+      '<div class="steps" style="--steps-start: 0">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+    expect(render(':::steps{start=-2}\n1. First\n:::\n')).toBe(
+      '<div class="steps" style="--steps-start: -2">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('keeps the directive out of the title and token info', () => {
+    const tokens = new MarkdownIt()
+      .use(markdownSteps)
+      .parse(':::steps{start=5} Continue\n1. First\n:::\n', {});
+
+    expect(tokens[0].attrs).toEqual([['class', 'steps'], ['style', '--steps-start: 5']]);
+    expect(tokens[0].info).toBe('Continue');
+  });
+
+  it('does not open a container when the directive is malformed', () => {
+    const source = ':::steps{start=abc}\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<p>:::steps{start=abc}</p>\n<ol>\n<li>First\n:::</li>\n</ol>\n',
+    );
+  });
+
+  it('keeps brace tails that are not start directives as the title', () => {
+    expect(render(':::steps {start}\n1. First\n:::\n')).toBe(
+      '<div class="steps">\n<p class="custom-title">{start}</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+    expect(render(':::steps Note {start=5}\n1. First\n:::\n')).toBe(
+      '<div class="steps">\n<p class="custom-title">Note {start=5}</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('opens the container when the directive follows a list item', () => {
+    const source = '1. Step one\n:::steps{start=5}\n2. A\n3. B\n:::\n';
+
+    expect(render(source)).toBe(
+      '<ol>\n<li>Step one</li>\n</ol>\n<div class="steps" style="--steps-start: 5">\n<ol start="2">\n<li>A</li>\n<li>B</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('supports the directive on a nested container', () => {
+    const source = ':::steps\n1. Outer\n\n:::steps{start=4}\n1. Inner\n:::\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps" style="--steps-start: 4">\n<ol>\n<li>Inner</li>\n</ol>\n</div>\n</div>\n',
     );
   });
 });

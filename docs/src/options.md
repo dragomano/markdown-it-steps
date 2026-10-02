@@ -46,7 +46,7 @@ md.use(markdownSteps, { containerClass: 'guide-steps' })
 
 ### Example
 
-<div class="steps guide-steps" style="--steps-start: 0">
+<div class="steps guide-steps">
   <p class="custom-title">Custom container class</p>
   <ol>
     <li>This block is rendered with a custom container class.</li>
@@ -75,7 +75,7 @@ md.use(markdownSteps, { titleTag: 'h3' })
 
 ### Example
 
-<div class="steps" style="--steps-start: 0">
+<div class="steps">
   <h3 class="custom-title">Installation</h3>
   <ol>
     <li>Install dependencies.</li>
@@ -123,7 +123,7 @@ md.use(markdownSteps, { titleClass: 'guide-steps-title' })
 
 ### Example
 
-<div class="steps guide-steps" style="--steps-start: 0">
+<div class="steps guide-steps">
   <p class="guide-steps-title">Styled title</p>
   <ol>
     <li>This title can be styled separately via <code>titleClass</code>.</li>

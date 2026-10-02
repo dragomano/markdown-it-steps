@@ -81,3 +81,23 @@ hero:
     3. Kiwi
     :::
 :::
+
+## Numbering
+
+Steps can start at any number. Add the `{start=N}` directive to the opening marker (it can be combined with an inline title):
+
+```md
+:::steps{start=5} Continue
+1. This step shows number 5.
+2. This one shows number 6.
+:::
+```
+
+<div class="steps" style="--steps-start: 5">
+  <ol>
+    <li>This step shows number 5.</li>
+    <li>This one shows number 6.</li>
+  </ol>
+</div>
+
+The bullets are rendered by CSS counters, so the numbers written in the Markdown source don't matter for them. The start value is exposed as the `--steps-start` custom property on the container — it holds the number of the first item (default `1`) and can also be set from your own CSS, e.g. `:root { --steps-start: 5 }` for every block on the page.

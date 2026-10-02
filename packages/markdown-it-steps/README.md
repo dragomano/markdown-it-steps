@@ -8,6 +8,25 @@ A markdown-it plugin for processing `:::steps ... :::` blocks in Markdown.
 
 Want to get started immediately? Check out the [quick start guide](https://dragomano.github.io/markdown-it-steps/).
 
+## Usage
+
+```md
+:::steps
+1. Do this.
+2. Do that.
+:::
+```
+
+Steps can start at any number with the `{start=N}` directive (combinable with an inline title):
+
+```md
+:::steps{start=5} Continue
+1. Shows number 5.
+:::
+```
+
+Numbering is rendered by CSS counters on the container, so the start value is exposed as the `--steps-start` custom property — the number of the first item, default `1`. The plugin emits that inline style only when the directive is present, which keeps the variable overridable from your own stylesheets.
+
 ## Dark mode
 
 Steps adapt to the site's [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme):

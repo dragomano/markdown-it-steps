@@ -1,6 +1,6 @@
 import type { MarkdownIt, StateBlock, Token } from 'markdown-it';
 
-const STEPS_OPEN_RE = /^:::\s*steps(?:\s+(.*))?$/;
+const STEPS_OPEN_RE = /^:::\s*steps(?:\s*(?:\{start=(-?\d+)\})?(?:\s+(.*))?)?$/;
 const CONTAINER_MARKER_RE = /^(:{3,})(.*)$/;
 const FENCE_OPEN_RE = /^([`~]{3,})/;
 
@@ -67,8 +67,11 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
 
     if (!stepsMatch) return false;
 
-    const title = stepsMatch[1]?.trim() ?? '';
+    const title = stepsMatch[2]?.trim() ?? '';
     const hasTitle = title.length > 0;
+    // The variable holds the number of the first item, so the directive value
+    // goes into the style as is.
+    const start = stepsMatch[1] !== undefined ? Number.parseInt(stepsMatch[1], 10) : undefined;
 
     if (silent) return true;
 
@@ -119,7 +122,10 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
 
     token = state.push('steps_open', 'div', 1);
     token.block = true;
-    token.attrs = [['class', containerClass], ['style', '--steps-start: 0']];
+    // Without the directive no style is emitted, so the value stays overridable
+    // from CSS via --steps-start (the inline style would win the cascade).
+    token.attrs = [['class', containerClass]];
+    if (start !== undefined) token.attrs.push(['style', `--steps-start: ${start}`]);
     token.markup = ':::';
     token.info = title;
     token.map = [startLine, nextLine];

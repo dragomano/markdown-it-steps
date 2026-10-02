@@ -128,6 +128,15 @@ describe('style.css theming', () => {
     }
   });
 
+  it('treats --steps-start as the number of the first item', () => {
+    expect(root.decls['--steps-start']).toBe('1');
+    expect(first('.steps ol').decls['counter-reset']).toBe('steps-counter var(--steps-start)');
+    expect(first('.steps ol>li').decls['counter-increment']).toBe('steps-counter');
+    // The first item must render the reset value as is, otherwise the first
+    // bullet would show --steps-start + 1.
+    expect(first('.steps ol>li:first-child').decls['counter-increment']).toBe('none');
+  });
+
   it('does not set the palette inside prefers-color-scheme media queries', () => {
     // Media queries cannot tell VitePress light mode from a theme-less page,
     // which is why the fallback goes through color-scheme instead (TODO #10).

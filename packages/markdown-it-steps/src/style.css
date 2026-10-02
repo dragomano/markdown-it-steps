@@ -1,5 +1,5 @@
 :root {
-  --steps-start: 0;
+  --steps-start: 1;
   --steps-line-height: 1.75;
   --steps-line-height-headings: 1.2;
   --steps-text-xs: .8125rem;
@@ -58,6 +58,12 @@ html.dark {
   padding-inline-start: calc(var(--bullet-size) + 1rem);
   padding-bottom: 1px;
   min-height: calc(var(--bullet-size) + var(--bullet-margin));
+}
+
+/* --steps-start holds the number of the first item, not the counter seed, so the
+   first item renders the reset value as is and later items add their increments. */
+.steps ol>li:first-child {
+  counter-increment: none;
 }
 
 .steps ol>li+li {
