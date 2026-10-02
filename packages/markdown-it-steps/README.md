@@ -8,6 +8,15 @@ A markdown-it plugin for processing `:::steps ... :::` blocks in Markdown.
 
 Want to get started immediately? Check out the [quick start guide](https://dragomano.github.io/markdown-it-steps/).
 
+## Dark mode
+
+Steps adapt to the site's [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme):
+
+- VitePress (1.x and 2.x) works out of the box in both modes.
+- If the site does not manage `color-scheme` at all, the stylesheet declares `color-scheme: light dark` on `<html>` with zero specificity: steps follow the OS preference, and any `color-scheme` declared by the site wins regardless of load order. On VitePress sites the plugin stays out of `color-scheme` entirely, because VitePress declares it itself.
+- Sites that toggle a class on `<html>` instead are supported via `html.dark` and `html.light`.
+- Browsers without `light-dark()` support (Chrome < 123, Firefox < 120, Safari < 17.5) render the light palette unless `html.dark` is set.
+
 ## Note
 
 The package is ESM-only: it ships no CommonJS build. `require()` works in Node.js 20.19+; older CJS environments need a bundler or a dynamic `import()`.

@@ -3,17 +3,45 @@
   --steps-line-height: 1.75;
   --steps-line-height-headings: 1.2;
   --steps-text-xs: .8125rem;
+
+  /* Light palette: the default, and the fallback when light-dark() is unsupported. */
+  --steps-color-white: hsl(224, 10%, 10%);
+  --steps-color-gray-one: hsl(224, 6%, 77%);
+  --steps-color-gray-two: hsl(224, 20%, 94%);
+  --steps-color-hairline-light: var(--steps-color-gray-two);
+}
+
+/* OS fallback for pages without their own theme management. Zero specificity: any
+   color-scheme the site declares wins, whatever the load order. VitePress is excluded
+   because its own color-scheme rules live in a cascade layer, which loses to any
+   unlayered declaration — the plugin must not compete with them in the first place.
+   VitePress marks its pages differently in dev (client script URL) and build
+   (generator meta), so both are checked. */
+:where(html:not(:has(meta[name="generator"][content^="VitePress"], script[src*="vitepress"]))) {
+  color-scheme: light dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
   --steps-color-white: hsl(0, 0%, 100%);
   --steps-color-gray-one: hsl(224, 10%, 23%);
   --steps-color-gray-two: hsl(224, 14%, 16%);
   --steps-color-hairline-light: var(--steps-color-gray-one);
 }
 
-html:not(.dark) {
-  --steps-color-white: hsl(224, 10%, 10%);
-  --steps-color-gray-one: hsl(224, 6%, 77%);
-  --steps-color-gray-two: hsl(224, 20%, 94%);
-  --steps-color-hairline-light: var(--steps-color-gray-two);
+/* The plain values above are the fallback: inside var() an unsupported light-dark()
+   would invalidate the whole declaration, so the adaptive pair only applies where it works. */
+@supports (color: light-dark(#fff, #000)) {
+  :root {
+    --steps-color-white: light-dark(hsl(224, 10%, 10%), hsl(0, 0%, 100%));
+    --steps-color-gray-one: light-dark(hsl(224, 6%, 77%), hsl(224, 10%, 23%));
+    --steps-color-gray-two: light-dark(hsl(224, 20%, 94%), hsl(224, 14%, 16%));
+    --steps-color-hairline-light: light-dark(hsl(224, 20%, 94%), hsl(224, 10%, 23%));
+  }
 }
 
 .steps ol {

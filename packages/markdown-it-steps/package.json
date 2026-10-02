@@ -27,6 +27,7 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^5.0.3",
     "markdown-it": "^15.0.2",
+    "postcss": "^8.5.28",
     "typescript": "^7.0.2",
     "vite": "^8.3.2",
     "vitest": "^5.0.3"

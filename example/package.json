@@ -1,0 +1,17 @@
+{
+  "name": "markdown-it-steps-example",
+  "license": "MIT",
+  "description": "Standalone usage example for markdown-it-steps (no VitePress).",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "markdown-it": "^15.0.2",
+    "markdown-it-steps": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
