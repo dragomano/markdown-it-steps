@@ -237,3 +237,30 @@ describe('indented code blocks inside steps', () => {
     );
   });
 });
+
+describe('token metadata', () => {
+  it('fills map, info and markup on the container tokens', () => {
+    const tokens = new MarkdownIt()
+      .use(markdownSteps)
+      .parse(':::steps Getting started\n1. First\n:::\n', {});
+
+    expect(tokens[0].type).toBe('steps_open');
+    expect(tokens[0].markup).toBe(':::');
+    expect(tokens[0].info).toBe('Getting started');
+    expect(tokens[0].map).toEqual([0, 2]);
+
+    const close = tokens.find((token) => token.type === 'steps_close');
+
+    expect(close.markup).toBe(':::');
+  });
+
+  it('leaves info empty when the container has no title', () => {
+    const tokens = new MarkdownIt()
+      .use(markdownSteps)
+      .parse(':::steps\n1. First\n:::\n', {});
+
+    expect(tokens[0].type).toBe('steps_open');
+    expect(tokens[0].info).toBe('');
+    expect(tokens[0].map).toEqual([0, 2]);
+  });
+});

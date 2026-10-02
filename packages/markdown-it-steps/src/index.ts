@@ -120,6 +120,9 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     token = state.push('steps_open', 'div', 1);
     token.block = true;
     token.attrs = [['class', containerClass], ['style', '--steps-start: 0']];
+    token.markup = ':::';
+    token.info = title;
+    token.map = [startLine, nextLine];
 
     if (hasTitle) {
       token = state.push('steps_title_open', titleTag, 1);
@@ -140,6 +143,9 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
 
     token = state.push('steps_close', 'div', -1);
     token.block = true;
+    // The closing marker must equal the bottom of the marker stack, which is
+    // always 3 colons, so the markup is a constant.
+    token.markup = ':::';
 
     state.line = nextLine + 1;
 
