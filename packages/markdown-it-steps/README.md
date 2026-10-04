@@ -27,6 +27,10 @@ Steps can start at any number with the `{start=N}` directive (combinable with an
 
 Numbering is rendered by CSS counters on the container, so the start value is exposed as the `--steps-start` custom property — the number of the first item, default `1`. The plugin emits that inline style only when the directive is present, which keeps the variable overridable from your own stylesheets.
 
+## Known limitations
+
+- A `:::` line on its own inside a raw HTML block (for example, between `<div>` and `</div>`) is still treated as the container's closing marker and truncates the block. markdown-it-container behaves the same way. Keep container markers out of raw HTML inside steps, or wrap them in fenced code blocks.
+
 ## Dark mode
 
 Steps adapt to the site's [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme):
