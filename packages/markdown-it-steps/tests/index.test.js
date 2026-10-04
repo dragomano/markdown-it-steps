@@ -196,6 +196,48 @@ describe('marker line classification', () => {
   });
 });
 
+describe('blockquotes and reference definitions', () => {
+  it('opens the container when :::steps terminates a quoted paragraph', () => {
+    const source = '> para\n:::steps\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<blockquote>\n<p>para</p>\n</blockquote>\n<div class="steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('closes a container inside a blockquote via a lazy closing line', () => {
+    const source = '> :::steps\n> 1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<blockquote>\n<div class="steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n</blockquote>\n',
+    );
+  });
+
+  it('opens the container right after a reference definition', () => {
+    const source = '[docs]: https://example.com\n:::steps\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<div class="steps">\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+  });
+
+  it('keeps lazy continuation of a quoted paragraph intact', () => {
+    const source = '> para\ncontinuation\n';
+
+    expect(render(source)).toBe(
+      '<blockquote>\n<p>para\ncontinuation</p>\n</blockquote>\n',
+    );
+  });
+
+  it('keeps a quoted marker as a paragraph when a list interrupts the blockquote', () => {
+    const source = '> :::steps\n1. First\n:::\n';
+
+    expect(render(source)).toBe(
+      '<blockquote>\n<p>:::steps</p>\n</blockquote>\n<ol>\n<li>First\n:::</li>\n</ol>\n',
+    );
+  });
+});
+
 describe('indented code blocks inside steps', () => {
   it('preserves ::: inside an indented code block', () => {
     const source = ':::steps\ntext\n\n    :::\n:::\n';
