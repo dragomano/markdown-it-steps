@@ -59,7 +59,19 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     typeof options.titleClass === 'string' && options.titleClass.trim().length > 0
       ? options.titleClass.trim()
       : 'custom-title';
-  const titleTag: TitleTag = isTitleTag(options.titleTag) ? options.titleTag : 'p';
+  let titleTag: TitleTag = 'p';
+
+  if (options.titleTag !== undefined) {
+    if (isTitleTag(options.titleTag)) {
+      titleTag = options.titleTag;
+    } else {
+      // The warning fires once per .use() call, not per container, so a broken
+      // option cannot flood the build output.
+      console.warn(
+        `[markdown-it-steps] Invalid titleTag ${JSON.stringify(options.titleTag)}, falling back to "p". Allowed: ${Array.from(ALLOWED_TITLE_TAGS).join(', ')}.`,
+      );
+    }
+  }
 
   const stepsRule = (state: StateBlock, startLine: number, endLine: number, silent: boolean): boolean => {
     const lineText = getLineText(state, startLine);

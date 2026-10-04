@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import markdownSteps from '../src/index.ts';
 
 function render(source, options) {
@@ -151,6 +151,42 @@ describe('title inline markup', () => {
     expect(render(source)).toBe(
       '<div class="steps">\n<p class="custom-title">*not bold*</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
+  });
+});
+
+describe('titleTag validation', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('warns and falls back to a paragraph for a tag outside the allowed list', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    expect(render(':::steps Title\n1. First\n:::\n', { titleTag: 'h1' })).toBe(
+      '<div class="steps">\n<p class="custom-title">Title</p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
+    );
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledWith(
+      '[markdown-it-steps] Invalid titleTag "h1", falling back to "p". Allowed: p, div, h2, h3, h4, h5, h6.',
+    );
+  });
+
+  it('warns for non-string values as well', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    render(':::steps Title\n1. First\n:::\n', { titleTag: null });
+
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Invalid titleTag null'));
+  });
+
+  it('stays silent for a valid titleTag and when the option is omitted', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    render(':::steps Title\n1. First\n:::\n', { titleTag: 'h3' });
+    render(':::steps Title\n1. First\n:::\n');
+
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 
