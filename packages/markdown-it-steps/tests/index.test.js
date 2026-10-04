@@ -82,7 +82,9 @@ describe('markdown-it-steps', () => {
   it('supports custom titleTag and titleClass', () => {
     const source = ':::steps Getting started\n1. First\n:::\n';
 
-    expect(render(source, { titleTag: 'h3', titleClass: 'steps-heading' })).toBe(
+    expect(
+      render(source, { titleTag: 'h3', titleClass: 'steps-heading' }),
+    ).toBe(
       '<div class="steps">\n<h3 class="steps-heading">Getting started</h3>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
     );
   });
@@ -104,7 +106,8 @@ describe('markdown-it-steps', () => {
   });
 
   it('opens a nested container immediately after a list item inside steps', () => {
-    const source = ':::steps\n1. Outer\n:::steps\n2. Inner\n:::\n3. After\n:::\n';
+    const source =
+      ':::steps\n1. Outer\n:::steps\n2. Inner\n:::\n3. After\n:::\n';
 
     expect(render(source)).toBe(
       '<div class="steps">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps">\n<ol start="2">\n<li>Inner</li>\n</ol>\n</div>\n<ol start="3">\n<li>After</li>\n</ol>\n</div>\n',
@@ -130,7 +133,8 @@ describe('title inline markup', () => {
   });
 
   it('resolves reference links defined after the container', () => {
-    const source = ':::steps [docs]\n1. First\n:::\n\n[docs]: https://example.com\n';
+    const source =
+      ':::steps [docs]\n1. First\n:::\n\n[docs]: https://example.com\n';
 
     expect(render(source)).toBe(
       '<div class="steps">\n<p class="custom-title"><a href="https://example.com">docs</a></p>\n<ol>\n<li>First</li>\n</ol>\n</div>\n',
@@ -177,7 +181,9 @@ describe('titleTag validation', () => {
     render(':::steps Title\n1. First\n:::\n', { titleTag: null });
 
     expect(warn).toHaveBeenCalledOnce();
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Invalid titleTag null'));
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('Invalid titleTag null'),
+    );
   });
 
   it('stays silent for a valid titleTag and when the option is omitted', () => {
@@ -200,7 +206,8 @@ describe('marker line classification', () => {
   });
 
   it('supports VitePress-style nested containers with longer markers inside steps', () => {
-    const source = ':::steps\n:::: info\n::: warning\nbe careful\n:::\n::::\n:::\n';
+    const source =
+      ':::steps\n:::: info\n::: warning\nbe careful\n:::\n::::\n:::\n';
 
     expect(render(source)).toBe(
       '<div class="steps">\n<p>:::: info\n::: warning\nbe careful\n:::\n::::</p>\n</div>\n',
@@ -226,9 +233,7 @@ describe('marker line classification', () => {
   it('does not close a container whose opening marker is longer than the closing one', () => {
     const source = ':::steps\n:::: tip\ntext\n:::\n:::\n';
 
-    expect(render(source)).toBe(
-      '<p>:::steps\n:::: tip\ntext\n:::\n:::</p>\n',
-    );
+    expect(render(source)).toBe('<p>:::steps\n:::: tip\ntext\n:::\n:::</p>\n');
   });
 });
 
@@ -347,7 +352,10 @@ describe('start directive', () => {
       .use(markdownSteps)
       .parse(':::steps{start=5} Continue\n1. First\n:::\n', {});
 
-    expect(tokens[0].attrs).toEqual([['class', 'steps'], ['style', '--steps-start: 5']]);
+    expect(tokens[0].attrs).toEqual([
+      ['class', 'steps'],
+      ['style', '--steps-start: 5'],
+    ]);
     expect(tokens[0].info).toBe('Continue');
   });
 
@@ -377,7 +385,8 @@ describe('start directive', () => {
   });
 
   it('supports the directive on a nested container', () => {
-    const source = ':::steps\n1. Outer\n\n:::steps{start=4}\n1. Inner\n:::\n:::\n';
+    const source =
+      ':::steps\n1. Outer\n\n:::steps{start=4}\n1. Inner\n:::\n:::\n';
 
     expect(render(source)).toBe(
       '<div class="steps">\n<ol>\n<li>Outer</li>\n</ol>\n<div class="steps" style="--steps-start: 4">\n<ol>\n<li>Inner</li>\n</ol>\n</div>\n</div>\n',

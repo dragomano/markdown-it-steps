@@ -22,7 +22,15 @@ interface ContainerMarker {
   closes: boolean;
 }
 
-const ALLOWED_TITLE_TAGS = new Set<TitleTag>(['p', 'div', 'h2', 'h3', 'h4', 'h5', 'h6']);
+const ALLOWED_TITLE_TAGS = new Set<TitleTag>([
+  'p',
+  'div',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+]);
 
 function getLineText(state: StateBlock, line: number): string {
   const startPos = state.bMarks[line] + state.tShift[line];
@@ -47,16 +55,23 @@ function isTitleTag(value: unknown): value is TitleTag {
   return typeof value === 'string' && ALLOWED_TITLE_TAGS.has(value as TitleTag);
 }
 
-export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOptions = {}): void {
+export default function markdownSteps(
+  md: MarkdownIt,
+  options: MarkdownStepsOptions = {},
+): void {
   const customContainerClass =
-    typeof options.containerClass === 'string' && options.containerClass.trim().length > 0
+    typeof options.containerClass === 'string' &&
+    options.containerClass.trim().length > 0
       ? options.containerClass.trim()
       : '';
   const containerClass = customContainerClass
-    ? Array.from(new Set(['steps', ...customContainerClass.split(/\s+/)])).join(' ')
+    ? Array.from(new Set(['steps', ...customContainerClass.split(/\s+/)])).join(
+        ' ',
+      )
     : 'steps';
   const titleClass =
-    typeof options.titleClass === 'string' && options.titleClass.trim().length > 0
+    typeof options.titleClass === 'string' &&
+    options.titleClass.trim().length > 0
       ? options.titleClass.trim()
       : 'custom-title';
   let titleTag: TitleTag = 'p';
@@ -73,7 +88,12 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     }
   }
 
-  const stepsRule = (state: StateBlock, startLine: number, endLine: number, silent: boolean): boolean => {
+  const stepsRule = (
+    state: StateBlock,
+    startLine: number,
+    endLine: number,
+    silent: boolean,
+  ): boolean => {
     const lineText = getLineText(state, startLine);
     const stepsMatch = lineText.match(STEPS_OPEN_RE);
 
@@ -83,7 +103,10 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     const hasTitle = title.length > 0;
     // The variable holds the number of the first item, so the directive value
     // goes into the style as is.
-    const start = stepsMatch[1] !== undefined ? Number.parseInt(stepsMatch[1], 10) : undefined;
+    const start =
+      stepsMatch[1] !== undefined
+        ? Number.parseInt(stepsMatch[1], 10)
+        : undefined;
 
     if (silent) return true;
 
@@ -98,10 +121,16 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
       // line indented 4+ relative to the block start is indented code content and
       // can be neither a fence nor a container marker.
       const isCodeIndent = state.sCount[nextLine] - state.blkIndent >= 4;
-      const fenceMatch = isCodeIndent ? null : nextLineText.match(FENCE_OPEN_RE);
+      const fenceMatch = isCodeIndent
+        ? null
+        : nextLineText.match(FENCE_OPEN_RE);
 
       if (activeFence) {
-        if (fenceMatch && fenceMatch[1][0] === activeFence.char && fenceMatch[1].length >= activeFence.length) {
+        if (
+          fenceMatch &&
+          fenceMatch[1][0] === activeFence.char &&
+          fenceMatch[1].length >= activeFence.length
+        ) {
           activeFence = null;
         }
         nextLine++;
@@ -137,7 +166,8 @@ export default function markdownSteps(md: MarkdownIt, options: MarkdownStepsOpti
     // Without the directive no style is emitted, so the value stays overridable
     // from CSS via --steps-start (the inline style would win the cascade).
     token.attrs = [['class', containerClass]];
-    if (start !== undefined) token.attrs.push(['style', `--steps-start: ${start}`]);
+    if (start !== undefined)
+      token.attrs.push(['style', `--steps-start: ${start}`]);
     token.markup = ':::';
     token.info = title;
     token.map = [startLine, nextLine];

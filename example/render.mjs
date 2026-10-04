@@ -1,9 +1,13 @@
-import { existsSync } from 'node:fs';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-const pluginDist = new URL('../packages/markdown-it-steps/dist/index.js', import.meta.url);
+const pluginDist = new URL(
+  '../packages/markdown-it-steps/dist/index.js',
+  import.meta.url,
+);
 if (!existsSync(pluginDist)) {
-  console.error('The plugin is not built yet. Run: pnpm --filter markdown-it-steps build');
+  console.error(
+    'The plugin is not built yet. Run: pnpm --filter markdown-it-steps build',
+  );
   process.exit(1);
 }
 

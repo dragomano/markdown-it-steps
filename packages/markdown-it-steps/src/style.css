@@ -2,7 +2,7 @@
   --steps-start: 1;
   --steps-line-height: 1.75;
   --steps-line-height-headings: 1.2;
-  --steps-text-xs: .8125rem;
+  --steps-text-xs: 0.8125rem;
 
   /* Light palette: the default, and the fallback when light-dark() is unsupported. */
   --steps-color-white: hsl(224, 10%, 10%);
@@ -17,7 +17,11 @@
    unlayered declaration — the plugin must not compete with them in the first place.
    VitePress marks its pages differently in dev (client script URL) and build
    (generator meta), so both are checked. */
-:where(html:not(:has(meta[name="generator"][content^="VitePress"], script[src*="vitepress"]))) {
+:where(
+  html:not(
+    :has(meta[name="generator"][content^="VitePress"], script[src*="vitepress"])
+  )
+) {
   color-scheme: light dark;
 }
 
@@ -40,7 +44,10 @@ html.dark {
     --steps-color-white: light-dark(hsl(224, 10%, 10%), hsl(0, 0%, 100%));
     --steps-color-gray-one: light-dark(hsl(224, 6%, 77%), hsl(224, 10%, 23%));
     --steps-color-gray-two: light-dark(hsl(224, 20%, 94%), hsl(224, 14%, 16%));
-    --steps-color-hairline-light: light-dark(hsl(224, 20%, 94%), hsl(224, 10%, 23%));
+    --steps-color-hairline-light: light-dark(
+      hsl(224, 20%, 94%),
+      hsl(224, 10%, 23%)
+    );
   }
 }
 
@@ -52,7 +59,7 @@ html.dark {
   padding-inline-start: 0;
 }
 
-.steps ol>li {
+.steps ol > li {
   counter-increment: steps-counter;
   position: relative;
   padding-inline-start: calc(var(--bullet-size) + 1rem);
@@ -62,15 +69,15 @@ html.dark {
 
 /* --steps-start holds the number of the first item, not the counter seed, so the
    first item renders the reset value as is and later items add their increments. */
-.steps ol>li:first-child {
+.steps ol > li:first-child {
   counter-increment: none;
 }
 
-.steps ol>li+li {
+.steps ol > li + li {
   margin-top: 0;
 }
 
-.steps ol>li::before {
+.steps ol > li::before {
   content: counter(steps-counter);
   position: absolute;
   top: 0;
@@ -87,9 +94,9 @@ html.dark {
   box-shadow: inset 0 0 0 1px var(--steps-color-gray-one);
 }
 
-.steps ol>li::after {
+.steps ol > li::after {
   --guide-width: 1px;
-  content: '';
+  content: "";
   position: absolute;
   top: calc(var(--bullet-size) + var(--bullet-margin));
   bottom: var(--bullet-margin);
@@ -98,19 +105,19 @@ html.dark {
   background-color: var(--steps-color-hairline-light);
 }
 
-.steps ol>li> :first-child {
+.steps ol > li > :first-child {
   --lh: calc(1em * var(--steps-line-height));
   --shift-y: calc(0.5 * (var(--bullet-size) - var(--lh)));
   transform: translateY(var(--shift-y));
   margin-bottom: var(--shift-y);
 }
 
-.steps ol>li> :first-child:where(h1, h2, h3, h4, h5, h6) {
+.steps ol > li > :first-child:where(h1, h2, h3, h4, h5, h6) {
   --lh: calc(1em * var(--steps-line-height-headings));
 }
 
 @supports (--prop: 1lh) {
-  .steps ol>li> :first-child {
+  .steps ol > li > :first-child {
     --lh: 1lh;
   }
 }
